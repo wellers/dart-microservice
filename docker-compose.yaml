@@ -1,0 +1,16 @@
+services:    
+  dart-server:
+    build: ./dart-server/
+    ports:
+      - 80:8080
+    restart: on-failure
+    depends_on:
+      - mongo      
+    links:
+      - mongo    
+  mongo:
+    build: ./mongo/
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/temp:/data/db

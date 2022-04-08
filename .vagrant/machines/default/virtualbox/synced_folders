@@ -1,0 +1,1 @@
+{"virtualbox":{"/sv":{"mount_options":["fmode=777,dmode=777","uid=1000","gid=1000","_netdev"],"guestpath":"/sv","hostpath":"C:/GitRoot/dart-api","disabled":false,"__vagrantfile":true}}}

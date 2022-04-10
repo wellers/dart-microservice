@@ -1,16 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'package:shelf_plus/shelf_plus.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:objectid/objectid.dart' as objectid;
 
 import 'Models/person.dart';
 
 // Configure routes.
-final _router = Router()
+final _router = Router().plus
   ..get('/', _root)
   ..get('/status', _status)
   ..get('/api/find', _find)
@@ -19,39 +18,28 @@ final _router = Router()
 
 Response _root(Request req) => Response.ok('Hello World!\n');
 
-Response _status(Request request) {
-  final date = DateTime.now().millisecondsSinceEpoch;
+_status(Request request) => {"start": DateTime.now().millisecondsSinceEpoch};
 
-  return Response.ok(jsonEncode({"start": date}),
-      headers: {'Content-type': 'application/json'});
-}
-
-Future<Response> _insert(Request request) async {
-  final doc = Person.fromJson(jsonDecode(await request.readAsString()));
+_insert(Request request) async {
+  final doc = await request.body.asPerson;
 
   if (doc.name == null || doc.name!.isEmpty) {
-    return Response.ok(
-        jsonEncode({'success': false, 'message': 'name is required'}),
-        headers: {'Content-type': 'application/json'});
+    return {'success': false, 'message': 'name is required'};
   }
 
   if (doc.age == null) {
-    return Response.ok(
-        jsonEncode({'success': false, 'message': 'age is required'}),
-        headers: {'Content-type': 'application/json'});
+    return {'success': false, 'message': 'age is required'};
   }
 
   final result = await collection.insertOne(doc.toJson());
 
-  return Response.ok(
-      jsonEncode({
+  return {
         'success': result.success,
         'message': '${result.nInserted} record(s) inserted.'
-      }),
-      headers: {'Content-type': 'application/json'});
+      };
 }
 
-Future<Response> _find(Request request) async {
+_find(Request request) async {
   final filter = <String, dynamic>{};
 
   if (request.params.containsKey('id')) {
@@ -59,9 +47,7 @@ Future<Response> _find(Request request) async {
 
     final int? parsed = int.tryParse(id);
     if (parsed == null) {
-      return Response.ok(
-          jsonEncode({'success': false, 'message': 'invalid id'}),
-          headers: {'Content-type': 'application/json'});
+      return {'success': false, 'message': 'invalid id'};
     }
 
     // change to '_id' for mongodb
@@ -77,29 +63,25 @@ Future<Response> _find(Request request) async {
     final parsed = int.tryParse(age);
 
     if (parsed == null) {
-      return Response.ok(
-          jsonEncode({'success': false, 'message': 'invalid age.'}),
-          headers: {'Content-type': 'application/json'});
+      return {'success': false, 'message': 'invalid age.'};
     }
 
     filter['age'] = parsed;
   }
 
-  final result = await collection.find(filter).toList() ?? {};
+  final docs = await collection.find(filter).toList() ?? {};
 
-  final docs = result
-      .map((element) => {
+  final mapped = docs.map((element) => {
             'id': element['_id'],
             'name': element['name'],
             'age': element['age']
           })
       .toList();
 
-  return Response.ok(jsonEncode({'success': true, 'docs': docs}),
-      headers: {'Content-type': 'application/json'});
+  return {'success': true, 'docs': mapped};
 }
 
-Future<Response> _remove(Request request) async {
+_remove(Request request) async {
   final input = <String, dynamic>{};
   List<ObjectId> ids = [];
 
@@ -111,9 +93,7 @@ Future<Response> _remove(Request request) async {
       while (i < params.length) {
         var id = params[i].toString();
         if (!objectid.ObjectId.isValid(id)) {
-          return Response.ok(
-              jsonEncode({'success': false, 'message': 'invalid id'}),
-              headers: {'Content-type': 'application/json'});
+          return {'success': false, 'message': 'invalid id'};
         }
 
         ids.add(ObjectId.fromHexString(id));
@@ -127,12 +107,7 @@ Future<Response> _remove(Request request) async {
 
   final result = await collection.deleteMany(input);
 
-  return Response.ok(
-      jsonEncode({
-        'success': result.success,
-        'message': '${result.nRemoved} record(s) removed.'
-      }),
-      headers: {'Content-type': 'application/json'});
+  return {'success': result.success, 'message': '${result.nRemoved} record(s) removed.'};
 }
 
 final url = 'mongodb://192.168.50.101:27017/my_database';

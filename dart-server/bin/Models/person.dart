@@ -1,3 +1,5 @@
+import 'package:shelf_plus/shelf_plus.dart';
+
 class Person {
   final String? name;
   final int? age;
@@ -15,4 +17,8 @@ class Person {
   }
 
   Map<String, dynamic> toJson() => {"name": name, "age": age};
+}
+
+extension PersonAccessor on RequestBodyAccessor {
+  Future<Person> get asPerson async => Person.fromJson(await asJson);
 }

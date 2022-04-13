@@ -9,8 +9,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 import 'scalar_types.dart';
 
-final database = 'my_database';
-final url = 'mongodb://192.168.50.101:27017/$database';
+final url = Platform.environment['MONGO_URL'] ?? "";
 
 Future<DbCollection> connectToDatabase() async {
   final database = Db(url);

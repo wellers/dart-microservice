@@ -7,7 +7,14 @@
 		{
 			"console": "terminal",
 			"name": "dart-server",
-			"program": "bin/server.dart",
+			"program": "dart-server/bin/server.dart",
+			"request": "launch",
+			"type": "dart"
+		},
+		{
+			"console": "terminal",
+			"name": "dart-graphql",
+			"program": "dart-graphql/bin/server.dart",
 			"request": "launch",
 			"type": "dart"
 		}

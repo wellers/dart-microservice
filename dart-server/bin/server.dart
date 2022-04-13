@@ -31,7 +31,7 @@ _insert(Request request) async {
     return {'success': false, 'message': 'age is required'};
   }
 
-  final result = await collection.insertOne(doc.toJson());
+  final result = await db.insertOne(doc.toJson());
 
   return {
         'success': result.success,
@@ -69,7 +69,7 @@ _find(Request request) async {
     filter['age'] = parsed;
   }
 
-  final docs = await collection.find(filter).toList() ?? {};
+  final docs = await db.find(filter).toList() ?? {};
 
   final mapped = docs.map((element) => {
             'id': element['_id'],
@@ -105,19 +105,19 @@ _remove(Request request) async {
     input['_id'] = {'\$in': ids};
   }
 
-  final result = await collection.deleteMany(input);
+  final result = await db.deleteMany(input);
 
   return {'success': result.success, 'message': '${result.nRemoved} record(s) removed.'};
 }
 
-final url = 'mongodb://192.168.50.101:27017/my_database';
+final url = Platform.environment['MONGO_URL'] ?? "";
 // ignore: prefer_typing_uninitialized_variables
-var collection;
+var db;
 
 void main(List<String> args) async {
-  final db = Db(url);
-  await db.open();
-  collection = db.collection('people');
+  final database = Db(url);
+  await database.open();
+  db = database.collection('people');
 
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;

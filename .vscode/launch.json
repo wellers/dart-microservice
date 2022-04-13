@@ -9,14 +9,20 @@
 			"name": "dart-server",
 			"program": "dart-server/bin/server.dart",
 			"request": "launch",
-			"type": "dart"
+			"type": "dart",
+			"env": {
+				"MONGO_URL": "mongodb://192.168.50.101:27017/my_database"
+			}
 		},
 		{
 			"console": "terminal",
 			"name": "dart-graphql",
 			"program": "dart-graphql/bin/server.dart",
 			"request": "launch",
-			"type": "dart"
+			"type": "dart",
+			"env": {
+				"MONGO_URL": "mongodb://192.168.50.101:27017/my_database"
+			}
 		}
 	]
 }

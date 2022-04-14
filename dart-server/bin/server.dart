@@ -46,47 +46,47 @@ _insert(Request request) async {
 
     counter++;
   }  
-  
-  final result = await graphqlClient.insert('success, message', <String, dynamic>{ 'input': input });
-  return result;
+    
+  return await graphqlClient.insert('success, message', <String, dynamic>{ 'input': input });
 }
 
 _find(Request request) async {
   final filter = <String, dynamic>{};
 
-  if (request.params.containsKey('id')) {
-    final String id = request.params['id'].toString();
+  if (request.url.hasQuery) {
+    if (request.url.queryParameters.containsKey('id')) {
+      final String id = request.url.queryParameters['id']!;
 
-    if (!objectid.ObjectId.isValid(id.toString())) {
-      return {
-        'success': false, 
-        'message': 'invalid id'
-      };
-    }
+      if (!objectid.ObjectId.isValid(id.toString())) {
+        return {
+          'success': false, 
+          'message': 'invalid id'
+        };
+      }
     
-    filter['id'] = id;
-  }
-
-  if (request.params.containsKey('name')) {
-    filter['name'] = request.params['name'].toString();
-  }
-
-  if (request.params.containsKey('age')) {
-    final age = request.params['age'];
-    final parsed = int.tryParse(age!);
-
-    if (parsed == null) {
-      return {
-        'success': false, 
-        'message': 'invalid age.'
-      };
+      filter['id'] = id;
     }
 
-    filter['age'] = parsed;
-  }
-  
-  final result = await graphqlClient.find('docs { id, name, age }', <String, dynamic>{ 'filter': filter });  
-  return result;
+    if (request.url.queryParameters.containsKey('name')) {
+      filter['name'] = request.url.queryParameters['name']!;
+    }
+
+    if (request.url.queryParameters.containsKey('age')) {
+      final age = request.url.queryParameters['age']!;
+      final parsed = int.tryParse(age);
+
+      if (parsed == null) {
+        return {
+          'success': false, 
+          'message': 'invalid age.'
+        };
+      }
+
+      filter['age'] = parsed;
+    }
+  }  
+    
+  return await graphqlClient.find('docs { id, name, age }', <String, dynamic>{ 'filter': filter });  
 }
 
 _remove(Request request) async {
@@ -94,12 +94,12 @@ _remove(Request request) async {
   List ids = [];
 
   if (request.url.hasQuery) {
-    final params = jsonDecode(request.url.queryParameters['id'] as String);
+    final params = jsonDecode(request.url.queryParameters['id']!);
 
     if (params != null) {      
       ids = (params is String) ? [params] : params;
 
-      if (ids.any((element) => !objectid.ObjectId.isValid(element.toString()))) {
+      if (ids.any((id) => !objectid.ObjectId.isValid(id.toString()))) {
           return {
             'success': false,
             'message': 'invalid id'
@@ -109,9 +109,8 @@ _remove(Request request) async {
     
     input['id'] = ids;
   }
-  
-  final result = await graphqlClient.remove('success, message', <String, dynamic>{ 'input': input });  
-  return result;
+    
+  return await graphqlClient.remove('success, message', <String, dynamic>{ 'input': input });
 }
 
 void main(List<String> args) async {  

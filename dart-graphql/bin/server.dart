@@ -5,21 +5,11 @@ import 'package:leto_schema/leto_schema.dart';
 import 'package:leto_shelf/leto_shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_plus/shelf_plus.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
+import 'database.dart';
 import 'scalar_types.dart';
 
-final url = Platform.environment['MONGO_URL'] ?? "";
-
-Future<DbCollection> connectToDatabase() async {
-  final database = Db(url);
-  await database.open();
-  return database.collection('people');
-}
-
-Future<GraphQLSchema> makeGraphQLSchema() async {
-  final db = await connectToDatabase();
-
+Future<GraphQLSchema> makeGraphQLSchema(Database db) async {  
   // insert  
   final personInsertInput = inputObjectType("person_input", fields: [
     inputField("name", graphQLString.nonNull()),
@@ -82,9 +72,9 @@ Future<GraphQLSchema> makeGraphQLSchema() async {
               if (filter.containsKey('id')) {
                 filter['_id'] = filter['id'];
                 filter.remove('id');
-              }       
+              }
               
-              final docs = await db.find(filter).toList();
+              final docs = await db.people.find(filter).toList();
               
               return {
                 'success': true, 
@@ -107,7 +97,7 @@ Future<GraphQLSchema> makeGraphQLSchema() async {
           final people = (input['people'] as List)
             .map((e) => e as Map<String, dynamic>).toList();
 
-          final result = await db.insertMany(people);          
+          final result = await db.people.insertMany(people);          
 
           return { 
             'success': result.success, 
@@ -128,7 +118,7 @@ Future<GraphQLSchema> makeGraphQLSchema() async {
             input = { '_id': { "\$in" : ids } };
           }
 
-          final result = await db.deleteMany(input);
+          final result = await db.people.deleteMany(input);
 
           return { 
             'success': result.success, 
@@ -146,12 +136,13 @@ Future<GraphQLSchema> makeGraphQLSchema() async {
   return schema;
 }
 
-Future<HttpServer> runServer({ScopedMap? globals}) async {
-  // you can override state with ScopedMap.setGlobal/setScoped
+Future<HttpServer> runServer({ScopedMap? globals}) async {  
   final ScopedMap scopedMap = globals ?? ScopedMap.empty();
   
-  // Instantiate the GraphQLSchema
-  final schema = await makeGraphQLSchema();
+  final db = Database(Platform.environment['MONGO_URL'] ?? "");
+  await db.connectToDatabase();
+  
+  final schema = await makeGraphQLSchema(db);
   
   final letoGraphQL = GraphQL(
     schema,

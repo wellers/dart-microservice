@@ -10,7 +10,7 @@
 			"program": "dart-server/bin/server.dart",
 			"request": "launch",
 			"type": "dart",
-			"env": {
+			"env": {				
 				"GRAPH_URL": "http://192.168.50.101:3000/graphql"
 			}
 		},
@@ -21,6 +21,7 @@
 			"request": "launch",
 			"type": "dart",
 			"env": {
+				"PORT": 3000,
 				"MONGO_URL": "mongodb://192.168.50.101:27017/my_database"
 			}
 		}

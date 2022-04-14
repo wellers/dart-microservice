@@ -11,7 +11,7 @@
 			"request": "launch",
 			"type": "dart",
 			"env": {
-				"MONGO_URL": "mongodb://192.168.50.101:27017/my_database"
+				"GRAPH_URL": "http://192.168.50.101:3000/graphql"
 			}
 		},
 		{

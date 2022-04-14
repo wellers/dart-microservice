@@ -3,10 +3,14 @@ import 'dart:io';
 
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_plus/shelf_plus.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:objectid/objectid.dart' as objectid;
 
-import 'Models/person.dart';
+import 'Models/people.dart';
+import 'client.dart';
+
+final url = Platform.environment['GRAPH_URL'] ?? "";
+
+final graphqlClient = Client(url);
 
 // Configure routes.
 final _router = Router().plus
@@ -21,22 +25,30 @@ Response _root(Request req) => Response.ok('Hello World!\n');
 _status(Request request) => {"start": DateTime.now().millisecondsSinceEpoch};
 
 _insert(Request request) async {
-  final doc = await request.body.asPerson;
-
-  if (doc.name == null || doc.name!.isEmpty) {
-    return {'success': false, 'message': 'name is required'};
-  }
-
-  if (doc.age == null) {
-    return {'success': false, 'message': 'age is required'};
-  }
-
-  final result = await db.insertOne(doc.toJson());
-
-  return {
-        'success': result.success,
-        'message': '${result.nInserted} record(s) inserted.'
+  final People input = await request.body.asPeople;
+  
+  int counter = 0;
+  while(counter < input.people.length){
+    final person = input.people.elementAt(counter);
+    if (person.name == null || person.name!.isEmpty) {
+      return {
+        'success': false, 
+        'message': 'name is required'
       };
+    }
+
+    if (person.age == null) {
+      return {
+        'success': false, 
+        'message': 'age is required'
+      };
+    }
+
+    counter++;
+  }  
+  
+  final result = await graphqlClient.insert('success, message', <String, dynamic>{ 'input': input });
+  return result;
 }
 
 _find(Request request) async {
@@ -45,13 +57,14 @@ _find(Request request) async {
   if (request.params.containsKey('id')) {
     final String id = request.params['id'].toString();
 
-    final int? parsed = int.tryParse(id);
-    if (parsed == null) {
-      return {'success': false, 'message': 'invalid id'};
+    if (!objectid.ObjectId.isValid(id.toString())) {
+      return {
+        'success': false, 
+        'message': 'invalid id'
+      };
     }
-
-    // change to '_id' for mongodb
-    filter['_id'] = parsed;
+    
+    filter['id'] = id;
   }
 
   if (request.params.containsKey('name')) {
@@ -59,65 +72,49 @@ _find(Request request) async {
   }
 
   if (request.params.containsKey('age')) {
-    final age = request.params['age'].toString();
-    final parsed = int.tryParse(age);
+    final age = request.params['age'];
+    final parsed = int.tryParse(age!);
 
     if (parsed == null) {
-      return {'success': false, 'message': 'invalid age.'};
+      return {
+        'success': false, 
+        'message': 'invalid age.'
+      };
     }
 
     filter['age'] = parsed;
   }
-
-  final docs = await db.find(filter).toList() ?? {};
-
-  final mapped = docs.map((element) => {
-            'id': element['_id'],
-            'name': element['name'],
-            'age': element['age']
-          })
-      .toList();
-
-  return {'success': true, 'docs': mapped};
+  
+  final result = await graphqlClient.find('docs { id, name, age }', <String, dynamic>{ 'filter': filter });  
+  return result;
 }
 
 _remove(Request request) async {
   final input = <String, dynamic>{};
-  List<ObjectId> ids = [];
+  List ids = [];
 
   if (request.url.hasQuery) {
     final params = jsonDecode(request.url.queryParameters['id'] as String);
 
-    if (params != null) {
-      var i = 0;
-      while (i < params.length) {
-        var id = params[i].toString();
-        if (!objectid.ObjectId.isValid(id)) {
-          return {'success': false, 'message': 'invalid id'};
-        }
+    if (params != null) {      
+      ids = (params is String) ? [params] : params;
 
-        ids.add(ObjectId.fromHexString(id));
-        i++;
+      if (ids.any((element) => !objectid.ObjectId.isValid(element.toString()))) {
+          return {
+            'success': false,
+            'message': 'invalid id'
+          };
       }
     }
-
-    // change to '_id' for mongodb
-    input['_id'] = {'\$in': ids};
+    
+    input['id'] = ids;
   }
-
-  final result = await db.deleteMany(input);
-
-  return {'success': result.success, 'message': '${result.nRemoved} record(s) removed.'};
+  
+  final result = await graphqlClient.remove('success, message', <String, dynamic>{ 'input': input });  
+  return result;
 }
 
-final url = Platform.environment['MONGO_URL'] ?? "";
-// ignore: prefer_typing_uninitialized_variables
-var db;
-
-void main(List<String> args) async {
-  final database = Db(url);
-  await database.open();
-  db = database.collection('people');
+void main(List<String> args) async {  
 
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
@@ -127,6 +124,6 @@ void main(List<String> args) async {
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final server = await serve(_handler, ip, port);
+  final server = await serve(_handler, ip, port);  
   print('Server listening on port ${server.port}');
 }

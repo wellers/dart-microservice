@@ -16,9 +16,9 @@ class Person {
     );
   }
 
-  Map<String, dynamic> toJson() => {"name": name, "age": age};
+  Map<String, dynamic> toJson() => {"name": name, "age": age};  
 }
 
 extension PersonAccessor on RequestBodyAccessor {
-  Future<Person> get asPerson async => Person.fromJson(await asJson);
+  Future<Person> get asPerson async => Person.fromJson(await asJson); 
 }

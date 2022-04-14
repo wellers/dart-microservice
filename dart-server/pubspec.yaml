@@ -9,9 +9,10 @@ environment:
 
 dependencies:
   args: '2.3.0'
-  mongo_dart: '0.7.4'
+  graphql: '5.1.1'  
   objectid: '2.1.0'
   shelf_plus: '1.2.2'
+  gql: '0.13.1'
 
 dev_dependencies:
   http: '0.13.4'

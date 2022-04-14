@@ -163,7 +163,7 @@ Future<HttpServer> runServer({ScopedMap? globals}) async {
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;   
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final graphqlPath = Platform.environment['GRAPHQL_PATH'] ?? 'graphql';
+  final graphqlPath = Platform.environment['GRAPH_PATH'] ?? 'graphql';
   final host = Platform.environment['HOST'] ?? 'localhost';
   final endpoint = 'http://$host:$port/$graphqlPath';
 

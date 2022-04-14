@@ -1,1 +1,1 @@
-A containerised microservice with a Dart frontend server linking to a Leto GraphQL server over a Mongo database.
+A containerised microservice with a Dart front-end API, Leto GraphQL server and MongoDB database.

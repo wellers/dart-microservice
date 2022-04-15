@@ -5,7 +5,7 @@ import 'package:shelf/shelf_io.dart';
 import 'package:shelf_plus/shelf_plus.dart';
 import 'package:objectid/objectid.dart' as objectid;
 
-import 'Models/people.dart';
+import 'Models/insert.dart';
 import 'client.dart';
 
 RouterPlus setupServer(String graphqlUrl) {  
@@ -16,7 +16,7 @@ RouterPlus setupServer(String graphqlUrl) {
   status(Request request) => {"start": DateTime.now().millisecondsSinceEpoch};
 
   insert(Request request) async {
-    final InsertInput input = await request.body.asInsertInput;
+    final Insert input = await request.body.asInsert;
     
     if (input.people.isEmpty) {
       return {

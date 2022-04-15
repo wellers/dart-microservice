@@ -16,8 +16,15 @@ RouterPlus setupServer(String graphqlUrl) {
   status(Request request) => {"start": DateTime.now().millisecondsSinceEpoch};
 
   insert(Request request) async {
-    final People input = await request.body.asPeople;
+    final InsertInput input = await request.body.asInsertInput;
     
+    if (input.people.isEmpty) {
+      return {
+        'success': false, 
+        'message': 'people collection is required'
+      };
+    }
+
     int counter = 0;
     while(counter < input.people.length){
       final person = input.people.elementAt(counter);

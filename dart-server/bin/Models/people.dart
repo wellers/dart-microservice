@@ -9,7 +9,7 @@ class People {
     required this.people
   });  
 
-  Map<String, List<Map<String, dynamic>>> toJson() => { 'people': people.map((e) => e.toJson()).toList() };
+  Map<String, List<Map<String, dynamic>>> toJson() => { 'people': people.map((person) => person.toJson()).toList() };
 
   factory People.fromJson(Map<String, dynamic> json) {
     return People(people: (json['people'] as Iterable).map((person) => Person.fromJson(person)).toList());

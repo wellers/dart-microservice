@@ -73,6 +73,14 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
                 filter['_id'] = filter['id'];
                 filter.remove('id');
               }
+
+              if (filter.containsKey('name')) {
+                filter['\$text'] = { 
+                  '\$search': filter['name'], 
+                  '\$caseSensitive': false 
+                };
+                filter.remove('name');
+              }
               
               final docs = await db.people.find(filter).toList();
               

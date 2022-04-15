@@ -16,6 +16,7 @@ class Database {
     final database = Db(_url);
     await database.open();
   
-    people = database.collection('people');     
+    people = database.collection('people');
+    await people.createIndex(keys: { 'name': 'text' });
   }
 }

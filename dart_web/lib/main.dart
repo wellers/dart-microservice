@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import 'app.dart';
-import 'middlewares/middlewares.dart';
+import 'middleware/middleware.dart';
 import 'reducers/app_state_reducer.dart';
 
 void main() async {

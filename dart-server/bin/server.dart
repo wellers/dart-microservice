@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:shelf/shelf_io.dart';
+import 'package:shelf_cors_headers/shelf_cors_headers.dart';
 import 'package:shelf_plus/shelf_plus.dart';
 import 'package:objectid/objectid.dart' as objectid;
 
@@ -112,7 +113,10 @@ RouterPlus setupServer(String graphqlUrl) {
   }
 
   // Configure routes.
-  return Router().plus
+  final app = Router().plus;
+  app.use(corsHeaders());
+  
+  return app
     ..get('/', _root)
     ..get('/status', status)
     ..get('/api/find', find)
@@ -123,8 +127,8 @@ RouterPlus setupServer(String graphqlUrl) {
 void main(List<String> args) async {  
   final graphqlUrl = Platform.environment['GRAPH_URL'] ?? "";
 
-  final router = setupServer(graphqlUrl);    
-
+  final router = setupServer(graphqlUrl);  
+  
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 

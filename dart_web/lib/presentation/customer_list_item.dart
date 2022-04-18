@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 
-class CustomerItem extends StatelessWidget {
+class CustomerListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;  
   final Customer customer;
 
-  CustomerItem({
+  CustomerListItem({
     required this.onDismissed,    
     required this.customer,
   });
@@ -17,10 +17,15 @@ class CustomerItem extends StatelessWidget {
       key: Key('customer_${customer.id}'),
       onDismissed: onDismissed,
       child: (
-        ListTile(
-          title:Text('${customer.name} (${customer.age})')          
+        ListTile(                    
+          title: Row(
+            children: [              
+              Text(customer.name),              
+              Text(customer.age.toString())
+            ]
+          )
         )
-      )
+      )    
     );
   }
 }

@@ -6,7 +6,6 @@ version: 1.0.0
 environment:
   sdk: '2.16.2'
 
-
 dependencies:
   args: '2.3.0'
   graphql: '5.1.1'  

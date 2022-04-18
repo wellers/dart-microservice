@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../actions/actions.dart';
 import '../models/models.dart';
@@ -15,10 +16,12 @@ List<Middleware<AppState>> createStoreMiddleware() {
   ];
 }
 
+final String API_URL = dotenv.env['API_URL']!;
+
 _loadCustomers(Store<AppState> store, LoadCustomersAction action, NextDispatcher next) async {
   try {    
     // load  
-    final response = await http.get(Uri.parse('http://192.168.50.101/api/find'));
+    final response = await http.get(Uri.parse('${API_URL}/api/find'));
     final json = jsonDecode(await response.body);
   
     List<Customer> customers = [];
@@ -38,7 +41,7 @@ _addCustomer(Store<AppState> store, AddCustomerAction action, NextDispatcher nex
   next(action);
 
   //create
-  final response = await http.post(Uri.parse('http://192.168.50.101/api/insert'),
+  final response = await http.post(Uri.parse('${API_URL}/api/insert'),
     body: jsonEncode({
       'customers': [action.customer.toJson()]
     }));
@@ -56,7 +59,7 @@ _deleteCustomer(Store<AppState> store, DeleteCustomerAction action, NextDispatch
   next(action);  
 
   //delete
-  final response = await http.get(Uri.parse('http://192.168.50.101/api/remove?id="${action.id}"'));
+  final response = await http.get(Uri.parse('${API_URL}/api/remove?id="${action.id}"'));
   jsonDecode(await response.body);  
   
   store.dispatch(LoadCustomersAction());

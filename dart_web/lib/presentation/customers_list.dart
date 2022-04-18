@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 import 'loading_indicator.dart';
-import 'customer_item.dart';
+import 'customer_list_item.dart';
 
 class CustomersList extends StatelessWidget {
   final List<Customer> customers;
@@ -36,7 +36,7 @@ class CustomersList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final customer = customers[index];
 
-        return CustomerItem(
+        return CustomerListItem(
           customer: customer,
           onDismissed: (direction) {
             _removeCustomer(context, customer);

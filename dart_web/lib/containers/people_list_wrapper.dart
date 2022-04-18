@@ -27,7 +27,6 @@ class PeopleListWrapper extends StatelessWidget {
           body: PeopleList(
             key: Key('peopleList'),
             people: viewModel.people,
-            onCheckboxChanged: viewModel.onCheckboxChanged,
             onRemove: viewModel.onRemove,
             onUndoRemove: viewModel.onUndoRemove,
           ),
@@ -48,16 +47,14 @@ class PeopleListWrapper extends StatelessWidget {
 
 class _ViewModel {
   final List<Person> people;
-  final bool loading;
-  final Function(Person, bool) onCheckboxChanged;
+  final bool loading;  
   final Function(Person) onRemove;
   final Function(Person) onUndoRemove;
   final Function onBackPressed;
 
   _ViewModel({
     required this.people,
-    required this.loading,
-    required this.onCheckboxChanged,
+    required this.loading,    
     required this.onRemove,
     required this.onUndoRemove,
     required this.onBackPressed,
@@ -66,18 +63,12 @@ class _ViewModel {
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
       people: store.state.people,
-      loading: store.state.isLoading,
-      onCheckboxChanged: (person, complete) {
-        store.dispatch(UpdatePersonAction(
-          person.id,
-          person,
-        ));
-      },
+      loading: store.state.isLoading,      
       onRemove: (person) {
         store.dispatch(DeletePersonAction(person.id));
       },
       onUndoRemove: (person) {
-        store.dispatch(AddPersonAction(person: person));
+        store.dispatch(AddPersonAction(person: PersonInput.fromPerson(person)));
       },
       onBackPressed: () {        
         store.dispatch(UpdateTabAction(AppTab.home));

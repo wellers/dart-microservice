@@ -16,7 +16,7 @@ class AddPerson extends StatelessWidget {
       converter: (Store<AppState> store) {        
         return (name, age) {
           store.dispatch(AddPersonAction(
-            person: Person(name: name, age: int.parse(age))
+            person: PersonInput(name: name, age: int.parse(age))
           ));
         };        
       },

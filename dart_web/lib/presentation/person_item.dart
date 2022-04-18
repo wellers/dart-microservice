@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 
 class PersonItem extends StatelessWidget {
-  final DismissDirectionCallback onDismissed;
-  final ValueChanged<bool> onCheckboxChanged;
+  final DismissDirectionCallback onDismissed;  
   final Person person;
 
   PersonItem({
     required this.onDismissed,    
-    required this.onCheckboxChanged,
     required this.person,
   });
 

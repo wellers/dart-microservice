@@ -7,14 +7,12 @@ import 'person_item.dart';
 
 class PeopleList extends StatelessWidget {
   final List<Person> people;
-  final Function(Person, bool) onCheckboxChanged;
   final Function(Person) onRemove;
   final Function(Person) onUndoRemove;
 
   PeopleList({
     required Key key,
-    required this.people,
-    required this.onCheckboxChanged,
+    required this.people,    
     required this.onRemove,
     required this.onUndoRemove
   }) : super(key: key);
@@ -42,9 +40,6 @@ class PeopleList extends StatelessWidget {
           person: person,
           onDismissed: (direction) {
             _removePerson(context, person);
-          },          
-          onCheckboxChanged: (complete) {
-            onCheckboxChanged(person, complete);
           }
         );
       },

@@ -16,18 +16,6 @@ class PeopleLoadedAction {
   }
 }
 
-class UpdatePersonAction {
-  final String id;
-  final Person updatedPerson;
-
-  UpdatePersonAction(this.id, this.updatedPerson);
-
-  @override
-  String toString() {
-    return 'UpdatePersonAction{id: $id, updatedPerson: $updatedPerson}';
-  }
-}
-
 class DeletePersonAction {
   final String id;
 
@@ -40,14 +28,14 @@ class DeletePersonAction {
 }
 
 class AddPersonAction {
-  final Person person;
+  final PersonInput person;
 
   AddPersonAction({required this.person});  
 
   @override
   String toString() {
     return 'AddPersonAction{person: $person}';
-  }
+  }  
 }
 
 class UpdateTabAction {

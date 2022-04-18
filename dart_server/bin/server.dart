@@ -121,7 +121,7 @@ RouterPlus setupServer(String graphqlUrl) {
     ..get('/status', status)
     ..get('/api/find', find)
     ..post('/api/insert', insert)
-    ..delete('/api/remove', remove);
+    ..get('/api/remove', remove);
 }
 
 void main(List<String> args) async {  

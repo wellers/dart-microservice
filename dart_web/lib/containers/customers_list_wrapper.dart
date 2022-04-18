@@ -4,12 +4,12 @@ import 'package:redux/redux.dart';
 
 import '../actions/actions.dart';
 import '../models/models.dart';
-import '../presentation/people_list.dart';
+import '../presentation/customers_list.dart';
 import '../models/app_state.dart';
 import 'tab_selector.dart';
 
-class PeopleListWrapper extends StatelessWidget {
-  PeopleListWrapper({required Key key}) : super(key: key);
+class CustomersListWrapper extends StatelessWidget {
+  CustomersListWrapper({required Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +18,25 @@ class PeopleListWrapper extends StatelessWidget {
       builder: (context, viewModel) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('People'),
+            title: Text('Customers'),
             leading: BackButton(onPressed: () {
                 Navigator.pushNamed(context, Routes.home);
                 return viewModel.onBackPressed();
               })
           ),
-          body: PeopleList(
-            key: Key('peopleList'),
-            people: viewModel.people,
+          body: CustomersList(
+            key: Key('customersList'),
+            customers: viewModel.customers,
             onRemove: viewModel.onRemove,
             onUndoRemove: viewModel.onUndoRemove,
           ),
           floatingActionButton: FloatingActionButton(
-            key: Key('addPersonFab'),
+            key: Key('addCustomerFab'),
             onPressed: () {
-              Navigator.pushNamed(context, Routes.addPerson);
+              Navigator.pushNamed(context, Routes.addCustomer);
             },
             child: Icon(Icons.add),
-            tooltip: 'Add Person',
+            tooltip: 'Add Customer',
           ),
           bottomNavigationBar: TabSelector(key: Key('tabSelector'))
         );
@@ -46,14 +46,14 @@ class PeopleListWrapper extends StatelessWidget {
 }
 
 class _ViewModel {
-  final List<Person> people;
+  final List<Customer> customers;
   final bool loading;  
-  final Function(Person) onRemove;
-  final Function(Person) onUndoRemove;
+  final Function(Customer) onRemove;
+  final Function(Customer) onUndoRemove;
   final Function onBackPressed;
 
   _ViewModel({
-    required this.people,
+    required this.customers,
     required this.loading,    
     required this.onRemove,
     required this.onUndoRemove,
@@ -62,13 +62,13 @@ class _ViewModel {
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
-      people: store.state.people,
+      customers: store.state.customers,
       loading: store.state.isLoading,      
-      onRemove: (person) {
-        store.dispatch(DeletePersonAction(person.id));
+      onRemove: (customer) {
+        store.dispatch(DeleteCustomerAction(customer.id));
       },
-      onUndoRemove: (person) {
-        store.dispatch(AddPersonAction(person: PersonInput.fromPerson(person)));
+      onUndoRemove: (customer) {
+        store.dispatch(AddCustomerAction(customer: CustomerInput.fromCustomer(customer)));
       },
       onBackPressed: () {        
         store.dispatch(UpdateTabAction(AppTab.home));

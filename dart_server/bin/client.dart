@@ -26,8 +26,8 @@ class Client {
 
   Future<Map> insert(String fields, Map<String, dynamic> variables) async {
     final QueryOptions options = QueryOptions(
-      document: parseString('''mutation(\$input: people_insert_input!) {
-          people_insert(input: \$input) {
+      document: parseString('''mutation(\$input: customers_insert_input!) {
+          customers_insert(input: \$input) {
               $fields
           } 
       }'''),
@@ -40,13 +40,13 @@ class Client {
       return { 'errors': [result.exception.toString()] };
     }
 
-    return (result.data as Map)['people_insert'];
+    return (result.data as Map)['customers_insert'];
   }
 
   Future<Map> find(String fields, Map<String, dynamic> variables) async {
     final QueryOptions options = QueryOptions(
-      document: parseString('''query(\$filter: people_find_filter!) {
-          people_find(filter: \$filter) {
+      document: parseString('''query(\$filter: customers_find_filter!) {
+          customers_find(filter: \$filter) {
               $fields
           } 
       }'''),
@@ -59,13 +59,13 @@ class Client {
        return { 'errors': [result.exception.toString()] };
     }
 
-    return ((result.data as Map)['people_find']);
+    return ((result.data as Map)['customers_find']);
   }
 
   Future<Map> remove(String fields, Map<String, dynamic> variables) async {
     final QueryOptions options = QueryOptions(
-      document: parseString('''mutation(\$input: people_remove_input) {
-          people_remove(input: \$input) {
+      document: parseString('''mutation(\$input: customers_remove_input) {
+          customers_remove(input: \$input) {
               $fields
           } 
       }'''),
@@ -78,6 +78,6 @@ class Client {
       return { 'errors': [result.exception.toString()] };
     }
 
-    return (result.data as Map)['people_remove'];  
+    return (result.data as Map)['customers_remove'];  
   }
 }

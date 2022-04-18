@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 import 'loading_indicator.dart';
-import 'person_item.dart';
+import 'customer_item.dart';
 
-class PeopleList extends StatelessWidget {
-  final List<Person> people;
-  final Function(Person) onRemove;
-  final Function(Person) onUndoRemove;
+class CustomersList extends StatelessWidget {
+  final List<Customer> customers;
+  final Function(Customer) onRemove;
+  final Function(Customer) onUndoRemove;
 
-  PeopleList({
+  CustomersList({
     required Key key,
-    required this.people,    
+    required this.customers,    
     required this.onRemove,
     required this.onUndoRemove
   }) : super(key: key);
@@ -23,7 +23,7 @@ class PeopleList extends StatelessWidget {
       key: Key('appLoading'), 
       builder: (context, loading) {
         return loading
-          ? LoadingIndicator(key: Key('peopleLoading'))
+          ? LoadingIndicator(key: Key('customersLoading'))
           : _buildListView();
       }
     );
@@ -31,23 +31,23 @@ class PeopleList extends StatelessWidget {
 
   _buildListView() {
      return ListView.builder(
-      key: Key('peopleList'),
-      itemCount: people.length,      
+      key: Key('customersList'),
+      itemCount: customers.length,      
       itemBuilder: (BuildContext context, int index) {
-        final person = people[index];
+        final customer = customers[index];
 
-        return PersonItem(
-          person: person,
+        return CustomerItem(
+          customer: customer,
           onDismissed: (direction) {
-            _removePerson(context, person);
+            _removeCustomer(context, customer);
           }
         );
       },
     );
   }
 
-  void _removePerson(BuildContext context, Person person) {
-    onRemove(person);
+  void _removeCustomer(BuildContext context, Customer customer) {
+    onRemove(customer);
 
     // ignore: deprecated_member_use
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -59,7 +59,7 @@ class PeopleList extends StatelessWidget {
         ),
         action: SnackBarAction(
           label: 'Undo',
-          onPressed: () => onUndoRemove(person),
+          onPressed: () => onUndoRemove(customer),
         )));
   }
 }

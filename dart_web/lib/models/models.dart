@@ -1,13 +1,13 @@
 enum AppTab { 
   home, 
-  listPeople
+  listCustomers
 }
 
 extension ActiveTabExtensions on AppTab {
   appTabToRoute() {
     switch (this) {      
-      case AppTab.listPeople:
-        return Routes.listPeople;
+      case AppTab.listCustomers:
+        return Routes.listCustomers;
       default:
         return Routes.home;        
     }
@@ -16,41 +16,41 @@ extension ActiveTabExtensions on AppTab {
 
 class Routes {
   static final home = '/';  
-  static final listPeople = '/listPeople';
-  static final addPerson = '/addPerson';  
+  static final listCustomers = '/listCustomers';
+  static final addCustomer = '/addCustomer';  
 }
 
-class PersonInput {
+class CustomerInput {
   final String name;
   final int age;
 
-  const PersonInput({    
+  const CustomerInput({    
     required this.name,
     required this.age,     
   });
   
-  factory PersonInput.fromJson(Map<String, dynamic> json) => PersonInput(      
+  factory CustomerInput.fromJson(Map<String, dynamic> json) => CustomerInput(      
       name: json['name'],
       age: json['age'],
     );
 
-  factory PersonInput.fromPerson(Person person) => PersonInput(name: person.name, age: person.age);
+  factory CustomerInput.fromCustomer(Customer customer) => CustomerInput(name: customer.name, age: customer.age);
 
   Map<String, dynamic> toJson() => {"name": name, "age": age};
 }
 
-class Person {
+class Customer {
   final String id;
   final String name;
   final int age;
 
-  const Person({    
+  const Customer({    
     required this.name,
     required this.age, 
     required this.id    
   });
   
-  factory Person.fromJson(Map<String, dynamic> json) => Person(
+  factory Customer.fromJson(Map<String, dynamic> json) => Customer(
       id: json['id'],
       name: json['name'],
       age: json['age'],

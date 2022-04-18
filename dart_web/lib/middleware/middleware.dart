@@ -8,56 +8,56 @@ import '../models/app_state.dart';
 
 List<Middleware<AppState>> createStoreMiddleware() {
   return [
-    TypedMiddleware<AppState, LoadPeopleAction>(_loadPeople),
-    TypedMiddleware<AppState, AddPersonAction>(_addPerson),
-    TypedMiddleware<AppState, PeopleLoadedAction>(_peopleLoaded),
-    TypedMiddleware<AppState, DeletePersonAction>(_deletePerson),
+    TypedMiddleware<AppState, LoadCustomersAction>(_loadCustomers),
+    TypedMiddleware<AppState, AddCustomerAction>(_addCustomer),
+    TypedMiddleware<AppState, CustomersLoadedAction>(_customersLoaded),
+    TypedMiddleware<AppState, DeleteCustomerAction>(_deleteCustomer),
   ];
 }
 
-_loadPeople(Store<AppState> store, LoadPeopleAction action, NextDispatcher next) async {
+_loadCustomers(Store<AppState> store, LoadCustomersAction action, NextDispatcher next) async {
   try {    
     // load  
     final response = await http.get(Uri.parse('http://192.168.50.101/api/find'));
     final json = jsonDecode(await response.body);
   
-    List<Person> people = [];
+    List<Customer> customers = [];
     if (json.containsKey('docs')) {
-      people = (json['docs'] as Iterable).map((person) => Person.fromJson(person)).toList();
+      customers = (json['docs'] as Iterable).map((customer) => Customer.fromJson(customer)).toList();
     }
 
-    store.dispatch(PeopleLoadedAction(people));
+    store.dispatch(CustomersLoadedAction(customers));
   } catch (err) {
-    store.dispatch(PeopleNotLoadedAction());
+    store.dispatch(CustomersNotLoadedAction());
   } 
   
   next(action);
 }
 
-_addPerson(Store<AppState> store, AddPersonAction action, NextDispatcher next) async {    
+_addCustomer(Store<AppState> store, AddCustomerAction action, NextDispatcher next) async {    
   next(action);
 
   //create
   final response = await http.post(Uri.parse('http://192.168.50.101/api/insert'),
     body: jsonEncode({
-      'people': [action.person.toJson()]
+      'customers': [action.customer.toJson()]
     }));
   
   jsonDecode(await response.body);  
   
-  store.dispatch(LoadPeopleAction());  
+  store.dispatch(LoadCustomersAction());  
 }
 
-_peopleLoaded(Store<AppState> store, action, NextDispatcher next) {
+_customersLoaded(Store<AppState> store, action, NextDispatcher next) {
   next(action);
 }
 
-_deletePerson(Store<AppState> store, DeletePersonAction action, NextDispatcher next) async {  
+_deleteCustomer(Store<AppState> store, DeleteCustomerAction action, NextDispatcher next) async {  
   next(action);  
 
   //delete
   final response = await http.get(Uri.parse('http://192.168.50.101/api/remove?id="${action.id}"'));
   jsonDecode(await response.body);  
   
-  store.dispatch(LoadPeopleAction());
+  store.dispatch(LoadCustomersAction());
 }

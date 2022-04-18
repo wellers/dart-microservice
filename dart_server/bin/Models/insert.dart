@@ -1,22 +1,22 @@
 import 'package:shelf_plus/shelf_plus.dart';
 
-import 'person.dart';
+import 'customer.dart';
 
 class Insert {
-  final List<Person> people;
+  final List<Customer> customers;
 
   const Insert({
-    required this.people
+    required this.customers
   });  
 
-  Map<String, List<Map<String, dynamic>>> toJson() => { 'people': people.map((person) => person.toJson()).toList() };
+  Map<String, List<Map<String, dynamic>>> toJson() => { 'customers': customers.map((customer) => customer.toJson()).toList() };
 
   factory Insert.fromJson(Map<String, dynamic> json) {
-    if (!json.containsKey('people')) {
-      return Insert(people: []);
+    if (!json.containsKey('customers')) {
+      return Insert(customers: []);
     }
 
-    return Insert(people: (json['people'] as Iterable).map((person) => Person.fromJson(person)).toList());
+    return Insert(customers: (json['customers'] as Iterable).map((customer) => Customer.fromJson(customer)).toList());
   }
 }
 extension InsertAccessor on RequestBodyAccessor {

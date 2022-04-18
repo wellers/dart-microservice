@@ -5,12 +5,12 @@ import 'models.dart';
 @immutable
 class AppState {
   final bool isLoading;
-  final List<Person> people;
+  final List<Customer> customers;
   final AppTab activeTab;
 
   AppState({
     this.isLoading = false,
-    this.people = const [],
+    this.customers = const [],
     this.activeTab = AppTab.home
   });
 
@@ -18,12 +18,12 @@ class AppState {
 
   AppState copyWith({
     required bool isLoading,
-    required List<Person> people,
+    required List<Customer> customers,
     required AppTab activeTab,
   }) {
     return AppState(
       isLoading: isLoading,
-      people: people,
+      customers: customers,
       activeTab: activeTab,      
     );
   }
@@ -31,7 +31,7 @@ class AppState {
   @override
   int get hashCode =>
       isLoading.hashCode ^
-      people.hashCode ^
+      customers.hashCode ^
       activeTab.hashCode;      
 
   @override
@@ -40,11 +40,11 @@ class AppState {
       other is AppState &&
           runtimeType == other.runtimeType &&
           isLoading == other.isLoading &&
-          people == other.people &&
+          customers == other.customers &&
           activeTab == other.activeTab;          
 
   @override
   String toString() {
-    return 'AppState{isLoading: $isLoading, people: $people, activeTab: $activeTab}';
+    return 'AppState{isLoading: $isLoading, customers: $customers, activeTab: $activeTab}';
   }
 }

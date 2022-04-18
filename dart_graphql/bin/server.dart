@@ -11,45 +11,45 @@ import 'scalar_types.dart';
 
 Future<GraphQLSchema> makeGraphQLSchema(Database db) async {  
   // insert  
-  final personInsertInput = inputObjectType("person_input", fields: [
+  final customerInsertInput = inputObjectType("customer_input", fields: [
     inputField("name", graphQLString.nonNull()),
     inputField("age", graphQLInt.nonNull())
   ]);  
 
-  final peopleInsertInput = inputObjectType("people_insert_input", fields: [
-    inputField("people", listOf(personInsertInput.nonNull()))
+  final customersInsertInput = inputObjectType("customers_insert_input", fields: [
+    inputField("customers", listOf(customerInsertInput.nonNull()))
   ]);
 
-  final peopleInsertResult = objectType("people_insert_result", fields: [
+  final customersInsertResult = objectType("customers_insert_result", fields: [
     field("success", graphQLBoolean.nonNull()),
     field("message", graphQLString.nonNull())
   ]);
 
   // find
-  final personResultType = objectType("person", fields: [
+  final customerResultType = objectType("customer", fields: [
     field("id", scalarObjectIdGraphQLType.nonNull(), resolve: (parent, ctx) => (parent as Map)['_id']),
     field("name", graphQLString.nonNull()),
     field("age", graphQLInt.nonNull())
   ]);  
 
-  final peopleFindFilter = inputObjectType("people_find_filter", fields: [
+  final customersFindFilter = inputObjectType("customers_find_filter", fields: [
     inputField("id", scalarObjectIdGraphQLType),
     inputField("name", graphQLString),
     inputField("age", graphQLInt)
   ]);
 
-  final peopleFindResult = objectType("people_find_result", fields: [
+  final customersFindResult = objectType("customers_find_result", fields: [
     field("success", graphQLBoolean.nonNull()),
     field("message", graphQLString.nonNull()),
-    field("docs", listOf(personResultType.nonNull()).nonNull())
+    field("docs", listOf(customerResultType.nonNull()).nonNull())
   ]);
 
   // remove
-  final peopleRemoveInput = inputObjectType("people_remove_input", fields: [
+  final customersRemoveInput = inputObjectType("customers_remove_input", fields: [
     inputField("id", listOf(scalarObjectIdGraphQLType))
   ]);
 
-  final peopleRemoveResult = objectType("people_remove_result", fields: [
+  final customersRemoveResult = objectType("customers_remove_result", fields: [
     field("success", graphQLBoolean.nonNull()),
     field("message", graphQLString.nonNull())
   ]);
@@ -57,10 +57,10 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
   var queryType = objectType("Query", 
         fields: [          
           field(
-            "people_find", 
-            peopleFindResult,    
+            "customers_find", 
+            customersFindResult,    
             inputs: [
-              GraphQLFieldInput("filter", peopleFindFilter)
+              GraphQLFieldInput("filter", customersFindFilter)
             ],      
             resolve: (obj, ctx) async {        
               Map<String, dynamic> filter = (ctx.args['filter'] as Map<String, dynamic>);
@@ -82,7 +82,7 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
                 filter.remove('name');
               }
               
-              final docs = await db.people.find(filter).toList();
+              final docs = await db.customers.find(filter).toList();
               
               return {
                 'success': true, 
@@ -95,17 +95,17 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
   var mutationType = objectType("Mutation",
     fields:[      
       field(
-        "people_insert",
-        peopleInsertResult,
+        "customers_insert",
+        customersInsertResult,
         inputs: [
-          GraphQLFieldInput("input", peopleInsertInput.nonNull())          
+          GraphQLFieldInput("input", customersInsertInput.nonNull())          
         ],
         resolve: (obj, ctx) async {
           final input = ctx.args['input'] as Map<String, dynamic>;
-          final people = (input['people'] as List)
+          final customers = (input['customers'] as List)
             .map((e) => e as Map<String, dynamic>).toList();
 
-          final result = await db.people.insertMany(people);          
+          final result = await db.customers.insertMany(customers);          
 
           return { 
             'success': result.success, 
@@ -114,10 +114,10 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
         }
       ),
       field(
-        "people_remove",
-        peopleRemoveResult,
+        "customers_remove",
+        customersRemoveResult,
         inputs: [
-          GraphQLFieldInput("input", peopleRemoveInput)
+          GraphQLFieldInput("input", customersRemoveInput)
         ],
         resolve: (obj, ctx) async {          
           Map<String, dynamic> input = ctx.args['input'] as Map<String, dynamic>;                    
@@ -126,7 +126,7 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
             input = { '_id': { "\$in" : ids } };
           }
 
-          final result = await db.people.deleteMany(input);
+          final result = await db.customers.deleteMany(input);
 
           return { 
             'success': result.success, 

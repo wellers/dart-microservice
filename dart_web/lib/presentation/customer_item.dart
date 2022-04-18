@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 
-class PersonItem extends StatelessWidget {
+class CustomerItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;  
-  final Person person;
+  final Customer customer;
 
-  PersonItem({
+  CustomerItem({
     required this.onDismissed,    
-    required this.person,
+    required this.customer,
   });
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key('person_${person.id}'),
+      key: Key('customer_${customer.id}'),
       onDismissed: onDismissed,
       child: (
         ListTile(
-          title:Text('${person.name} (${person.age})')          
+          title:Text('${customer.name} (${customer.age})')          
         )
       )
     );

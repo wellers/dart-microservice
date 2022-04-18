@@ -2,7 +2,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class Database {
   String _url = "";
-  late DbCollection people;
+  late DbCollection customers;
 
   Database(String url) {
     _url = url;
@@ -16,7 +16,7 @@ class Database {
     final database = Db(_url);
     await database.open();
   
-    people = database.collection('people');
-    await people.createIndex(keys: { 'name': 'text' });
+    customers = database.collection('customers');
+    await customers.createIndex(keys: { 'name': 'text' });
   }
 }

@@ -19,24 +19,24 @@ RouterPlus setupServer(String graphqlUrl) {
   insert(Request request) async {
     final Insert input = await request.body.asInsert;
     
-    if (input.people.isEmpty) {
+    if (input.customers.isEmpty) {
       return {
         'success': false, 
-        'message': 'people collection is required'
+        'message': 'customers collection is required'
       };
     }
 
     int counter = 0;
-    while(counter < input.people.length){
-      final person = input.people.elementAt(counter);
-      if (person.name == null || person.name!.isEmpty) {
+    while(counter < input.customers.length){
+      final customer = input.customers.elementAt(counter);
+      if (customer.name == null || customer.name!.isEmpty) {
         return {
           'success': false, 
           'message': 'name is required'
         };
       }
 
-      if (person.age == null) {
+      if (customer.age == null) {
         return {
           'success': false, 
           'message': 'age is required'

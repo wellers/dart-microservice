@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       builder: (BuildContext context, AppTab activeTab) {
         return Scaffold(
           appBar: AppBar(            
-            title: Text('People'),
+            title: Text('Home'),
             automaticallyImplyLeading: false,                                 
           ),
           body: Center(child: Text('Hello, World!')),          

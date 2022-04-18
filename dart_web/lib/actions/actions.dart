@@ -1,40 +1,40 @@
 
 import '../models/models.dart';
 
-class LoadPeopleAction {}
+class LoadCustomersAction {}
 
-class PeopleNotLoadedAction {}
+class CustomersNotLoadedAction {}
 
-class PeopleLoadedAction {
-  final List<Person> people;
+class CustomersLoadedAction {
+  final List<Customer> customers;
 
-  PeopleLoadedAction(this.people);
+  CustomersLoadedAction(this.customers);
 
   @override
   String toString() {
-    return 'PeoplesLoadedAction{people: $people}';
+    return 'CustomersLoadedAction{customers: $customers}';
   }
 }
 
-class DeletePersonAction {
+class DeleteCustomerAction {
   final String id;
 
-  DeletePersonAction(this.id);
+  DeleteCustomerAction(this.id);
 
   @override
   String toString() {
-    return 'DeletePersonAction{id: $id}';
+    return 'DeleteCustomerAction{id: $id}';
   }
 }
 
-class AddPersonAction {
-  final PersonInput person;
+class AddCustomerAction {
+  final CustomerInput customer;
 
-  AddPersonAction({required this.person});  
+  AddCustomerAction({required this.customer});  
 
   @override
   String toString() {
-    return 'AddPersonAction{person: $person}';
+    return 'AddCustomerAction{customer: $customer}';
   }  
 }
 

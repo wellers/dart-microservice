@@ -7,10 +7,10 @@ typedef OnSaveCallback = void Function(String task, String note);
 class AddEditScreen extends StatefulWidget {
   final bool isEditing;
   final OnSaveCallback onSave;
-  final Person? person;
+  final Customer? customer;
 
   AddEditScreen(
-      {required Key key, required this.onSave, required this.isEditing, required this.person})
+      {required Key key, required this.onSave, required this.isEditing, required this.customer})
       : super(key: key);
   @override
   _AddEditScreenState createState() => _AddEditScreenState();
@@ -31,7 +31,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isEditing ? 'Edit Person' : 'Add Person',
+          isEditing ? 'Edit Customer' : 'Add Customer',
         ),
       ),
       body: Padding(
@@ -41,7 +41,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: isEditing ? widget.person!.name : '',
+                initialValue: isEditing ? widget.customer!.name : '',
                 key: Key('nameField'),
                 autofocus: !isEditing,
                 style: textTheme.titleMedium,
@@ -56,7 +56,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 onSaved: (value) => _name = value!,
               ),
               TextFormField(
-                initialValue: isEditing ? widget.person!.age.toString() : '',
+                initialValue: isEditing ? widget.customer!.age.toString() : '',
                 key: Key('ageField'),                
                 style: textTheme.titleMedium,
                 decoration: InputDecoration(
@@ -74,8 +74,8 @@ class _AddEditScreenState extends State<AddEditScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        key: isEditing ? Key('savePersonFab') : Key('saveNewPerson'),
-        tooltip: isEditing ? 'Save Changes' : 'Add Person',
+        key: isEditing ? Key('saveCustomerFab') : Key('saveNewCustomer'),
+        tooltip: isEditing ? 'Save Changes' : 'Add Customer',
         child: Icon(isEditing ? Icons.check : Icons.add),
         onPressed: () {
           if (_formKey.currentState!.validate()) {

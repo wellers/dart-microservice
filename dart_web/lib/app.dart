@@ -4,11 +4,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 import 'actions/actions.dart';
-import 'containers/add_person.dart';
+import 'containers/add_customer.dart';
 import 'models/models.dart';
 import 'models/app_state.dart';
 import 'presentation/home_screen.dart';
-import 'presentation/people_screen.dart';
+import 'presentation/customers_screen.dart';
 
 
 class ReduxApp extends StatelessWidget {
@@ -21,16 +21,16 @@ class ReduxApp extends StatelessWidget {
     return StoreProvider(
       store: store,
       child: MaterialApp(
-        onGenerateTitle: (context) => 'People',        
+        onGenerateTitle: (context) => 'Customers',        
         theme: MyTheme.theme,
         routes: {
           Routes.home: (context) => HomeScreen(),
-          Routes.listPeople: (context) => PeopleScreen(              
+          Routes.listCustomers: (context) => CustomersScreen(              
             onInit: () {              
-              StoreProvider.of<AppState>(context).dispatch(LoadPeopleAction());
+              StoreProvider.of<AppState>(context).dispatch(LoadCustomersAction());
             }
           ),
-          Routes.addPerson:(context) => AddPerson(key: Key('addPerson'))
+          Routes.addCustomer:(context) => AddCustomer(key: Key('addCustomer'))
         }
       )
     );

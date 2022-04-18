@@ -7,25 +7,25 @@ import '../models/models.dart';
 import '../presentation/add_edit_screen.dart';
 import '../models/app_state.dart';
 
-class AddPerson extends StatelessWidget {
-  AddPerson({required Key key}) : super(key: key);
+class AddCustomer extends StatelessWidget {
+  AddCustomer({required Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OnSaveCallback>(
       converter: (Store<AppState> store) {        
         return (name, age) {
-          store.dispatch(AddPersonAction(
-            person: PersonInput(name: name, age: int.parse(age))
+          store.dispatch(AddCustomerAction(
+            customer: CustomerInput(name: name, age: int.parse(age))
           ));
         };        
       },
       builder: (BuildContext context, OnSaveCallback onSave) {
         return AddEditScreen(
-          key: Key('addPersonScreen'),
+          key: Key('addCustomerScreen'),
           onSave: onSave,
           isEditing: false, 
-          person: null,
+          customer: null,
         );
       }
     );

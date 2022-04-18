@@ -1,16 +1,16 @@
 import 'package:shelf_plus/shelf_plus.dart';
 
-class Person {
+class Customer {
   final String? name;
   final int? age;
 
-  const Person({    
+  const Customer({    
     required this.name,
     required this.age,
   });
 
-  factory Person.fromJson(Map<String, dynamic> json) {
-    return Person(
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(
       name: json['name'],
       age: json['age'],
     );
@@ -19,6 +19,6 @@ class Person {
   Map<String, dynamic> toJson() => {"name": name, "age": age};  
 }
 
-extension PersonAccessor on RequestBodyAccessor {
-  Future<Person> get asPerson async => Person.fromJson(await asJson); 
+extension CustomerAccessor on RequestBodyAccessor {
+  Future<Customer> get asCustomer async => Customer.fromJson(await asJson); 
 }

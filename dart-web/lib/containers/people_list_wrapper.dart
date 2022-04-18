@@ -6,6 +6,7 @@ import '../actions/actions.dart';
 import '../models/models.dart';
 import '../presentation/people_list.dart';
 import '../models/app_state.dart';
+import 'tab_selector.dart';
 
 class PeopleListWrapper extends StatelessWidget {
   PeopleListWrapper({required Key key}) : super(key: key);
@@ -15,12 +16,30 @@ class PeopleListWrapper extends StatelessWidget {
     return StoreConnector<AppState, _ViewModel>(
       converter: _ViewModel.fromStore,
       builder: (context, viewModel) {
-        return PeopleList(
-          key: Key('peopleList'),
-          people: viewModel.people,
-          onCheckboxChanged: viewModel.onCheckboxChanged,
-          onRemove: viewModel.onRemove,
-          onUndoRemove: viewModel.onUndoRemove,
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('People'),
+            leading: BackButton(onPressed: () {
+                Navigator.pushNamed(context, Routes.home);
+                return viewModel.onBackPressed();
+              })
+          ),
+          body: PeopleList(
+            key: Key('peopleList'),
+            people: viewModel.people,
+            onCheckboxChanged: viewModel.onCheckboxChanged,
+            onRemove: viewModel.onRemove,
+            onUndoRemove: viewModel.onUndoRemove,
+          ),
+          floatingActionButton: FloatingActionButton(
+            key: Key('addPersonFab'),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.addPerson);
+            },
+            child: Icon(Icons.add),
+            tooltip: 'Add Person',
+          ),
+          bottomNavigationBar: TabSelector(key: Key('tabSelector'))
         );
       },
     );
@@ -33,6 +52,7 @@ class _ViewModel {
   final Function(Person, bool) onCheckboxChanged;
   final Function(Person) onRemove;
   final Function(Person) onUndoRemove;
+  final Function onBackPressed;
 
   _ViewModel({
     required this.people,
@@ -40,6 +60,7 @@ class _ViewModel {
     required this.onCheckboxChanged,
     required this.onRemove,
     required this.onUndoRemove,
+    required this.onBackPressed,
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
@@ -58,6 +79,9 @@ class _ViewModel {
       onUndoRemove: (person) {
         store.dispatch(AddPersonAction(person: person));
       },
+      onBackPressed: () {        
+        store.dispatch(UpdateTabAction(AppTab.home));
+      }
     );
-  }
+  }  
 }

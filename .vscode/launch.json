@@ -6,8 +6,8 @@
 	"configurations": [		
 		{
 			"console": "terminal",
-			"name": "dart-server",
-			"program": "dart-server/bin/server.dart",
+			"name": "dart_server",
+			"program": "dart_server/bin/server.dart",
 			"request": "launch",
 			"type": "dart",
 			"env": {				
@@ -16,8 +16,8 @@
 		},
 		{
 			"console": "terminal",
-			"name": "dart-graphql",
-			"program": "dart-graphql/bin/server.dart",
+			"name": "dart_graphql",
+			"program": "dart_graphql/bin/server.dart",
 			"request": "launch",
 			"type": "dart",
 			"env": {

@@ -1,17 +1,17 @@
 services:    
-  dart-server:
-    build: ./dart-server/
+  dart_server:
+    build: ./dart_server/
     ports:
       - 80:8080
     environment:        
         - GRAPH_URL=http://192.168.50.101:3000/graphql
     restart: on-failure
     depends_on:
-      - dart-graphql      
+      - dart_graphql      
     links:
-      - dart-graphql
-  dart-graphql:
-    build: ./dart-graphql/
+      - dart_graphql
+  dart_graphql:
+    build: ./dart_graphql/
     ports:
       - 3000:3000
     environment:

@@ -4,7 +4,8 @@ description: A new Flutter project.
 environment:
   sdk: '2.16.2'
 
-dependencies:  
+dependencies:
+  http: '0.13.4'
   flutter:
     sdk: flutter
 

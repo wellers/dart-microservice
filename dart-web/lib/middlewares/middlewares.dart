@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
 import '../actions/actions.dart';
 import '../models/models.dart';
@@ -14,11 +17,19 @@ List<Middleware<AppState>> createStoreMiddleware() {
   ];
 }
 
-List<Person> people = <Person>[Person(id: '123', name: 'Paul', age: 30)];
+List<Person> people = <Person>[];
 
-_loadPeople(Store<AppState> store, action, NextDispatcher next) {
-  // load
-  try {
+_loadPeople(Store<AppState> store, LoadPeopleAction action, NextDispatcher next) async {
+  try {    
+    // load  
+    final response = await http.get(Uri.parse('http://192.168.50.101/api/find'));
+    final json = jsonDecode(await response.body);
+  
+    List<Person> people = [];
+    if (json.containsKey('docs')) {
+      people = (json['docs'] as Iterable).map((person) => Person.fromJson(person)).toList();
+    }  
+
     store.dispatch(PeopleLoadedAction(people));
   } catch (err) {
     store.dispatch(PeopleNotLoadedAction());
@@ -27,11 +38,19 @@ _loadPeople(Store<AppState> store, action, NextDispatcher next) {
   next(action);
 }
 
-_addPerson(Store<AppState> store, action, NextDispatcher next) {
+_addPerson(Store<AppState> store, AddPersonAction action, NextDispatcher next) async {
   next(action);
-
+  
   //create
-  people = peopleSelector(store.state);
+  final response = await http.post(Uri.parse('http://192.168.50.101/api/insert'),
+    body: jsonEncode({
+      'people': [action.person.toJson()]
+    }));
+  final json = jsonDecode(await response.body);
+
+  if (json['success'] == true) {
+    people = peopleSelector(store.state);
+  }
 }
 
 _updatePerson(Store<AppState> store, action, NextDispatcher next) {
@@ -48,9 +67,12 @@ _peopleLoaded(Store<AppState> store, action, NextDispatcher next) {
   people = peopleSelector(store.state);
 }
 
-_deletePerson(Store<AppState> store, action, NextDispatcher next) {
+_deletePerson(Store<AppState> store, DeletePersonAction action, NextDispatcher next) async {
   next(action);
 
   //delete
+  final response = await http.delete(Uri.parse('http://192.168.50.101/api/remove?id=${action.id}'));
+  jsonDecode(await response.body);
+
   people = peopleSelector(store.state);
 }

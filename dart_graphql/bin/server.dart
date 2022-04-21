@@ -56,7 +56,7 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
     inputField("age", graphQLInt)
   ]);
 
-  final customerUpsertInput = inputObjectType("customer_upsert_input", fields: [
+  final customersUpsertInput = inputObjectType("customers_upsert_input", fields: [
     inputField("filter", customersUpsertFilter.nonNull()),
     inputField("update", customersUpsertUpdate.nonNull())
   ]);
@@ -139,7 +139,7 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
         "customers_upsert",
         customersUpsertResult,
         inputs: [
-          GraphQLFieldInput("input", customerUpsertInput)
+          GraphQLFieldInput("input", customersUpsertInput)
         ],
         resolve: (obj, ctx) async {
           Map<String, dynamic> input = ctx.args['input'] as Map<String, dynamic>;

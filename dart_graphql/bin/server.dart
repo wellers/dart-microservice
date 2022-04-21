@@ -23,7 +23,7 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
   final customersInsertResult = objectType("customers_insert_result", fields: [
     field("success", graphQLBoolean.nonNull()),
     field("message", graphQLString.nonNull())
-  ]);
+  ]); 
 
   // find
   final customerResultType = objectType("customer", fields: [
@@ -42,6 +42,28 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
     field("success", graphQLBoolean.nonNull()),
     field("message", graphQLString.nonNull()),
     field("docs", listOf(customerResultType.nonNull()).nonNull())
+  ]);
+
+   // upsert
+   final customersUpsertFilter = inputObjectType("customers_upsert_filter", fields: [
+    inputField("id", scalarObjectIdGraphQLType),
+    inputField("name", graphQLString),
+    inputField("age", graphQLInt)
+  ]);
+
+  final customersUpsertUpdate = inputObjectType("customers_upsert_update", fields: [
+    inputField("name", graphQLString),
+    inputField("age", graphQLInt)
+  ]);
+
+  final customerUpsertInput = inputObjectType("customer_upsert_input", fields: [
+    inputField("filter", customersUpsertFilter.nonNull()),
+    inputField("update", customersUpsertUpdate.nonNull())
+  ]);
+
+  final customersUpsertResult = objectType("customers_upsert_result", fields: [
+    field("success", graphQLBoolean.nonNull()),
+    field("message", graphQLString.nonNull())
   ]);
 
   // remove
@@ -110,6 +132,45 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
           return { 
             'success': result.success, 
             'message': '${result.nInserted} record(s) inserted.'
+          };
+        }
+      ),
+      field(
+        "customers_upsert",
+        customersUpsertResult,
+        inputs: [
+          GraphQLFieldInput("input", customerUpsertInput)
+        ],
+        resolve: (obj, ctx) async {
+          Map<String, dynamic> input = ctx.args['input'] as Map<String, dynamic>;
+          Map<String, dynamic> filter = input['filter'] as Map<String, dynamic>;
+
+          if (filter.isEmpty) {
+            filter = {};
+          }
+
+          if (filter.containsKey('id')) {
+            filter['_id'] = filter['id'];
+            filter.remove('id');
+          }
+
+          if (filter.containsKey('name')) {
+            filter['\$text'] = { 
+              '\$search': filter['name'], 
+              '\$caseSensitive': false 
+            };
+            filter.remove('name');
+          }
+
+          final update = { 
+            '\$set': input['update']          
+          };
+
+          final result = await db.customers.updateOne(filter, update, upsert: true);
+          
+          return { 
+            'success': result.success, 
+            'message': '${result.nModified} record(s) modified. ${result.nUpserted} record(s) upserted.'
           };
         }
       ),

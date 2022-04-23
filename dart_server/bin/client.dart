@@ -43,6 +43,25 @@ class Client {
     return (result.data as Map)['customers_insert'];
   }
 
+  Future<Map> upsert(String fields, Map<String, dynamic> variables) async {
+    final QueryOptions options = QueryOptions(
+      document: parseString('''mutation(\$input: customers_upsert_input!) {
+          customers_upsert(input: \$input) {
+              $fields
+          } 
+      }'''),
+      variables: variables
+    );
+
+    final QueryResult result = await client.query(options);
+
+    if (result.hasException) {
+      return { 'errors': [result.exception.toString()] };
+    }
+
+    return (result.data as Map)['customers_upsert'];
+  }
+
   Future<Map> find(String fields, Map<String, dynamic> variables) async {
     final QueryOptions options = QueryOptions(
       document: parseString('''query(\$filter: customers_find_filter!) {

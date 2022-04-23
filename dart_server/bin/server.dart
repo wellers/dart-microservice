@@ -7,6 +7,7 @@ import 'package:shelf_plus/shelf_plus.dart';
 import 'package:objectid/objectid.dart' as objectid;
 
 import 'Models/insert.dart';
+import 'Models/upsert.dart';
 import 'client.dart';
 
 RouterPlus setupServer(String graphqlUrl) {  
@@ -47,6 +48,35 @@ RouterPlus setupServer(String graphqlUrl) {
     }  
       
     return await graphqlClient.insert('success, message', <String, dynamic>{ 'input': input });
+  }
+
+  upsert(Request request) async {
+    final Upsert input = await request.body.asUpsert;
+    
+    if (input.id == null) {
+      return {
+        'success': false, 
+        'message': 'id is required'
+      };
+    }
+    
+    Map<String, dynamic> update = {};
+    if (input.name != null && input.name!.isNotEmpty) {      
+      update['name'] = input.name;
+    }
+
+    if (input.age != null && !input.age!.isNaN) {
+      update['age'] = input.age;
+    }  
+
+    final variables = {
+      'input': {
+        'filter': { 'id': input.id },
+        'update': update
+      }
+    };
+
+    return await graphqlClient.upsert('success, message', variables);
   }
 
   find(Request request) async {
@@ -121,6 +151,7 @@ RouterPlus setupServer(String graphqlUrl) {
     ..get('/status', status)
     ..get('/api/find', find)
     ..post('/api/insert', insert)
+    ..post('/api/upsert', upsert)
     ..get('/api/remove', remove);
 }
 

@@ -8,10 +8,11 @@ import 'package:objectid/objectid.dart' as objectid;
 
 import 'Models/insert.dart';
 import 'Models/upsert.dart';
-import 'client.dart';
+
+import 'package:dart_graphql_client/dart_graphql_client.dart';
 
 RouterPlus setupServer(String graphqlUrl) {  
-  final graphqlClient = Client(graphqlUrl);  
+  final graphqlClient = DartGraphQLClient(graphqlUrl);  
 
   Response _root(Request req) => Response.ok('Hello World!\n');
 

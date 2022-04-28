@@ -1,0 +1,18 @@
+name: dart_graphql_client
+description: A client to interface with the dart_graphql server.
+version: 1.0.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '2.16.2'
+
+dependencies:
+  graphql: '5.1.1'  
+  objectid: '2.1.0'  
+  gql: '0.13.1'  
+
+dev_dependencies:
+  http: '0.13.4'
+  lints: '1.0.1'
+  test_process: '2.0.2'
+  test: '1.20.2'

@@ -1,10 +1,12 @@
+library dart_graphql_client;
+
 import 'package:graphql/client.dart';
 import 'package:gql/language.dart';
 
-class Client {  
+class DartGraphQLClient {  
   late GraphQLClient client;  
 
-  Client(String url) {
+  DartGraphQLClient(String url) {
     if (url.isEmpty) {
       throw ArgumentError('GRAPH_URL is required.');
     }    

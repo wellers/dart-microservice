@@ -1,0 +1,189 @@
+{
+	"client": "Thunder Client",
+	"collectionName": "dart-microservice-prototype",
+	"dateExported": "2022-04-28T18:46:05.519Z",
+	"version": "1.1",
+	"folders": [
+		{
+			"_id": "788dcf72-680c-4939-95c6-1dc38c73c7b4",
+			"name": "dart-server",
+			"containerId": "",
+			"created": "2022-04-14T20:23:16.575Z",
+			"sortNum": 10000
+		},
+		{
+			"_id": "9215dc21-8307-4248-a82d-0c05a2952b27",
+			"name": "dart-graphql",
+			"containerId": "",
+			"created": "2022-04-14T20:24:10.684Z",
+			"sortNum": 20000
+		}
+	],
+	"requests": [
+		{
+			"_id": "79edb05e-a627-4aa3-bd0c-457cabd6da90",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "788dcf72-680c-4939-95c6-1dc38c73c7b4",
+			"name": "/api/find",
+			"url": "http://{{HOST}}:{{SERVER_PORT}}/api/find",
+			"method": "GET",
+			"sortNum": 10000,
+			"created": "2022-04-14T20:23:45.518Z",
+			"modified": "2022-04-15T17:57:22.344Z",
+			"headers": [],
+			"params": [],
+			"tests": []
+		},
+		{
+			"_id": "9d0a7c50-07a4-4d93-931a-315c9cae8284",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "9215dc21-8307-4248-a82d-0c05a2952b27",
+			"name": "/find",
+			"url": "http://{{HOST}}:{{GRAPH_PORT}}/graphql",
+			"method": "POST",
+			"sortNum": 10000,
+			"created": "2022-04-14T20:23:57.154Z",
+			"modified": "2022-04-18T18:40:31.722Z",
+			"headers": [],
+			"params": [],
+			"body": {
+				"type": "graphql",
+				"raw": "",
+				"form": [],
+				"graphql": {
+					"query": "query($filter: customers_find_filter!) {\n    customers_find(filter: $filter) { \n        success, \n        message, \n        docs {            \n            id,\n            name, \n            age \n        } \n    } \n}",
+					"variables": "{\n    \"filter\": {\n        \n    }\n}"
+				}
+			},
+			"tests": []
+		},
+		{
+			"_id": "aebca0e4-44f9-4327-a13c-8bdd9b1be07e",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "788dcf72-680c-4939-95c6-1dc38c73c7b4",
+			"name": "/api/insert",
+			"url": "http://{{HOST}}:{{SERVER_PORT}}/api/insert",
+			"method": "POST",
+			"sortNum": 20000,
+			"created": "2022-04-14T20:24:43.780Z",
+			"modified": "2022-04-21T21:29:21.383Z",
+			"headers": [],
+			"params": [],
+			"body": {
+				"type": "json",
+				"raw": "{\n    \"customers\" : [{\n        \"name\":\"Paul\",\n        \"age\": 34\n    }]\n}",
+				"form": []
+			},
+			"tests": []
+		},
+		{
+			"_id": "faa4702d-1971-4bd2-a015-e6ef37d8913d",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "788dcf72-680c-4939-95c6-1dc38c73c7b4",
+			"name": "/api/remove",
+			"url": "http://{{HOST}}:{{SERVER_PORT}}/api/remove",
+			"method": "GET",
+			"sortNum": 30000,
+			"created": "2022-04-14T20:24:53.921Z",
+			"modified": "2022-04-21T21:33:52.712Z",
+			"headers": [],
+			"params": [
+				{
+					"name": "id",
+					"value": "\"625db32ea308fb496ca02118\"",
+					"isDisabled": true,
+					"isPath": false
+				}
+			],
+			"tests": []
+		},
+		{
+			"_id": "1aa6adb7-8810-461c-9e56-57e91134308b",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "9215dc21-8307-4248-a82d-0c05a2952b27",
+			"name": "/insert",
+			"url": "http://{{HOST}}:{{GRAPH_PORT}}/graphql",
+			"method": "POST",
+			"sortNum": 40000,
+			"created": "2022-04-14T20:25:03.131Z",
+			"modified": "2022-04-18T18:39:49.823Z",
+			"headers": [],
+			"params": [],
+			"body": {
+				"type": "graphql",
+				"raw": "",
+				"form": [],
+				"graphql": {
+					"query": "mutation($input: customers_insert_input!) {\n    customers_insert(input: $input) { \n        success, \n        message\n    } \n}",
+					"variables": "{\n    \"input\": { \n        \"customers\": [{ \n            \"name\": \"Tom\", \n            \"age\": 28\n        }, { \n            \"name\": \"Chris\", \n            \"age\": 21 \n        }]\n    }\n}"
+				}
+			},
+			"tests": []
+		},
+		{
+			"_id": "d926be29-2ec2-4e3b-85f2-f4b617897ce5",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "9215dc21-8307-4248-a82d-0c05a2952b27",
+			"name": "/remove",
+			"url": "http://{{HOST}}:{{GRAPH_PORT}}/graphql",
+			"method": "POST",
+			"sortNum": 50000,
+			"created": "2022-04-14T20:25:08.492Z",
+			"modified": "2022-04-21T20:23:01.042Z",
+			"headers": [],
+			"params": [],
+			"body": {
+				"type": "graphql",
+				"raw": "",
+				"form": [],
+				"graphql": {
+					"query": "mutation($input: customers_remove_input!) {\n    customers_remove(input: $input) { \n        success, \n        message\n    } \n}",
+					"variables": "{\n   \"input\": {\n      \n   }\n}"
+				}
+			},
+			"tests": []
+		},
+		{
+			"_id": "5152ef1f-f761-4c10-8652-0ba4ae3c49c7",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "9215dc21-8307-4248-a82d-0c05a2952b27",
+			"name": "/upsert",
+			"url": "http://{{HOST}}:{{GRAPH_PORT}}/graphql",
+			"method": "POST",
+			"sortNum": 60000,
+			"created": "2022-04-21T20:13:14.696Z",
+			"modified": "2022-04-21T20:17:01.184Z",
+			"headers": [],
+			"params": [],
+			"body": {
+				"type": "graphql",
+				"raw": "",
+				"form": [],
+				"graphql": {
+					"query": "mutation($input: customer_upsert_input!) {\r\n  customers_upsert(input: $input) {\r\n    success,\r\n    message\r\n  }\r\n}",
+					"variables": "{\r\n  \"input\": {\r\n    \"filter\": {\r\n      \"name\": \"Moo\"\r\n    },\r\n    \"update\": {\r\n      \"name\": \"Moo\",\r\n      \"age\": 31\r\n    }\r\n  }\r\n}"
+				}
+			},
+			"tests": []
+		},
+		{
+			"_id": "4207d889-2ae4-4cf7-96ee-9da3132791a9",
+			"colId": "ac8426c8-787d-4579-8b79-5b95cbb87b42",
+			"containerId": "788dcf72-680c-4939-95c6-1dc38c73c7b4",
+			"name": "/api/upsert",
+			"url": "http://{{HOST}}:{{SERVER_PORT}}/api/upsert",
+			"method": "POST",
+			"sortNum": 70000,
+			"created": "2022-04-21T21:26:03.822Z",
+			"modified": "2022-04-21T21:41:26.421Z",
+			"headers": [],
+			"params": [],
+			"body": {
+				"type": "json",
+				"raw": "{\n    \"id\": \"6261cf4153afa377d128126d\",\n    \"name\": \"Paul Welbourne\"\n}",
+				"form": []
+			},
+			"tests": []
+		}
+	]
+}

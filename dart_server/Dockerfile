@@ -3,6 +3,7 @@ FROM dart:stable AS build
 
 # Resolve app dependencies.
 WORKDIR /app
+COPY lib/ ./lib/
 COPY pubspec.* ./
 RUN dart pub get
 

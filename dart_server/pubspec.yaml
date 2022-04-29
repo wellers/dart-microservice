@@ -23,4 +23,4 @@ dev_dependencies:
 
 dependency_overrides:
   dart_graphql_client:
-    path: ../dart_graphql_client
+    path: lib/dart_graphql_client

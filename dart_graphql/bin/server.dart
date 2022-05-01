@@ -11,70 +11,106 @@ import 'scalar_types.dart';
 
 Future<GraphQLSchema> makeGraphQLSchema(Database db) async {  
   // insert  
-  final customerInsertInput = inputObjectType("customer_input", fields: [
-    inputField("name", graphQLString.nonNull()),
-    inputField("age", graphQLInt.nonNull())
-  ]);  
+  final customerInsertInput = inputObjectType(
+    "customer_input", 
+    fields: [
+      inputField("name", graphQLString.nonNull()),
+      inputField("age", graphQLInt.nonNull())
+    ]
+  );  
 
-  final customersInsertInput = inputObjectType("customers_insert_input", fields: [
-    inputField("customers", listOf(customerInsertInput.nonNull()))
-  ]);
+  final customersInsertInput = inputObjectType(
+    "customers_insert_input", 
+    fields: [
+      inputField("customers", listOf(customerInsertInput.nonNull()))
+    ]
+  );
 
-  final customersInsertResult = objectType("customers_insert_result", fields: [
-    field("success", graphQLBoolean.nonNull()),
-    field("message", graphQLString.nonNull())
-  ]); 
+  final customersInsertResult = objectType(
+    "customers_insert_result", 
+    fields: [
+      field("success", graphQLBoolean.nonNull()),
+      field("message", graphQLString.nonNull())
+    ]
+  ); 
 
   // find
-  final customerResultType = objectType("customer", fields: [
-    field("id", scalarObjectIdGraphQLType.nonNull(), resolve: (parent, ctx) => (parent as Map)['_id']),
-    field("name", graphQLString.nonNull()),
-    field("age", graphQLInt.nonNull())
-  ]);  
+  final customerResultType = objectType(
+    "customer", 
+    fields: [
+      field("id", scalarObjectIdGraphQLType.nonNull(), resolve: (parent, ctx) => (parent as Map)['_id']),
+      field("name", graphQLString.nonNull()),
+      field("age", graphQLInt.nonNull())
+    ]
+  );  
 
-  final customersFindFilter = inputObjectType("customers_find_filter", fields: [
-    inputField("id", scalarObjectIdGraphQLType),
-    inputField("name", graphQLString),
-    inputField("age", graphQLInt)
-  ]);
+  final customersFindFilter = inputObjectType(
+    "customers_find_filter", 
+    fields: [
+      inputField("id", scalarObjectIdGraphQLType),
+      inputField("name", graphQLString),
+      inputField("age", graphQLInt)
+    ]
+  );
 
-  final customersFindResult = objectType("customers_find_result", fields: [
-    field("success", graphQLBoolean.nonNull()),
-    field("message", graphQLString.nonNull()),
-    field("docs", listOf(customerResultType.nonNull()).nonNull())
-  ]);
+  final customersFindResult = objectType(
+    "customers_find_result", 
+    fields: [
+      field("success", graphQLBoolean.nonNull()),
+      field("message", graphQLString.nonNull()),
+      field("docs", listOf(customerResultType.nonNull()).nonNull())
+    ]
+  );
 
    // upsert
-   final customersUpsertFilter = inputObjectType("customers_upsert_filter", fields: [
-    inputField("id", scalarObjectIdGraphQLType),
-    inputField("name", graphQLString),
-    inputField("age", graphQLInt)
-  ]);
+   final customersUpsertFilter = inputObjectType(
+     "customers_upsert_filter", 
+     fields: [
+      inputField("id", scalarObjectIdGraphQLType),
+      inputField("name", graphQLString),
+      inputField("age", graphQLInt)
+    ]
+  );
 
-  final customersUpsertUpdate = inputObjectType("customers_upsert_update", fields: [
-    inputField("name", graphQLString),
-    inputField("age", graphQLInt)
-  ]);
+  final customersUpsertUpdate = inputObjectType(
+    "customers_upsert_update", 
+    fields: [
+      inputField("name", graphQLString),
+      inputField("age", graphQLInt)
+    ]
+  );
 
-  final customersUpsertInput = inputObjectType("customers_upsert_input", fields: [
-    inputField("filter", customersUpsertFilter.nonNull()),
-    inputField("update", customersUpsertUpdate.nonNull())
-  ]);
+  final customersUpsertInput = inputObjectType(
+    "customers_upsert_input", 
+    fields: [
+      inputField("filter", customersUpsertFilter.nonNull()),
+      inputField("update", customersUpsertUpdate.nonNull())
+    ]
+  );
 
-  final customersUpsertResult = objectType("customers_upsert_result", fields: [
-    field("success", graphQLBoolean.nonNull()),
-    field("message", graphQLString.nonNull())
-  ]);
+  final customersUpsertResult = objectType(
+    "customers_upsert_result", 
+    fields: [
+      field("success", graphQLBoolean.nonNull()),
+      field("message", graphQLString.nonNull())
+    ]
+  );
 
   // remove
-  final customersRemoveInput = inputObjectType("customers_remove_input", fields: [
-    inputField("id", listOf(scalarObjectIdGraphQLType))
-  ]);
+  final customersRemoveInput = inputObjectType(
+    "customers_remove_input", 
+    fields: [
+      inputField("id", listOf(scalarObjectIdGraphQLType))
+    ]
+  );
 
-  final customersRemoveResult = objectType("customers_remove_result", fields: [
-    field("success", graphQLBoolean.nonNull()),
-    field("message", graphQLString.nonNull())
-  ]);
+  final customersRemoveResult = objectType(
+    "customers_remove_result", 
+    fields: [
+      field("success", graphQLBoolean.nonNull()),
+      field("message", graphQLString.nonNull())
+    ]
+  );
 
   var queryType = objectType("Query", 
         fields: [          

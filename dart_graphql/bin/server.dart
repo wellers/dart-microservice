@@ -38,7 +38,11 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
   final customerResultType = objectType(
     "customer", 
     fields: [
-      field("id", scalarObjectIdGraphQLType.nonNull(), resolve: (parent, ctx) => (parent as Map)['_id']),
+      field(
+        "id", 
+        scalarObjectIdGraphQLType.nonNull(), 
+        resolve: (parent, ctx) => (parent as Map)['_id']
+      ),
       field("name", graphQLString.nonNull()),
       field("age", graphQLInt.nonNull())
     ]
@@ -161,7 +165,8 @@ Future<GraphQLSchema> makeGraphQLSchema(Database db) async {
         resolve: (obj, ctx) async {
           final input = ctx.args['input'] as Map<String, dynamic>;
           final customers = (input['customers'] as List)
-            .map((e) => e as Map<String, dynamic>).toList();
+            .map((e) => e as Map<String, dynamic>)
+            .toList();
 
           final result = await db.customers.insertMany(customers);          
 
